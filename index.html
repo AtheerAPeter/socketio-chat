@@ -3,10 +3,121 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
+    <!-- <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-    />
+    /> -->
+    <style>
+      * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body,.container {
+  background-color: #eeeeee;
+  height: 100vh;
+}
+
+#messageArea {
+  display: none;
+  
+}
+.message-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+li{
+  list-style-type: none;
+  background-color: white;
+}
+.col-md-4{
+  height: 80vh;
+  overflow: scroll;
+  padding: 10px;
+  margin: 20px;
+}
+.col-md-8{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+form{
+  position: relative;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+.form-group{
+  height: fit-content;
+  margin: 10px;
+  display: flex;
+  width: 100%;
+}
+.messageitself{
+  flex: 1;
+  overflow: scroll;
+}
+.form-control{
+  flex: 1;
+}
+input{
+  background-color: white;
+  border-radius: 10px;
+  margin: 10px;
+  padding: 10px;
+  border: none;
+  outline: none;
+
+}
+
+.hamburger{
+  z-index: 3;
+  justify-self: left;
+}
+.hambar {
+  z-index: 2;
+  position: absolute;
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  left: -100%;
+  transition: all 0.8s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  box-shadow: 2px 0px 5px rgb(189, 189, 189);
+}
+.hamburger:checked ~ .hambar {
+  left: -5%;
+}
+
+.well{
+  background-color: #dddddd;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px;
+  width: fit-content;
+  height: fit-content;
+}
+.col-md-12{
+  width: 300px;
+  height: 50px;
+}
+.row{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+    </style>
     <script
       src="https://code.jquery.com/jquery-3.5.1.min.js"
       integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
@@ -14,26 +125,17 @@
     ></script>
     <script src="/socket.io/socket.io.js"></script>
     <title>Document</title>
-    <style>
-      body {
-        margin-top: 30px;
-      }
-      #messageArea {
-        display: none;
-      }
-      li{
-          color: black;
-      }
-    </style>
   </head>
   <body>
     <div class="container">
+
+
+
       <div class="row" id="userFormArea">
           <div class="col-md-12">
             <form id="userForm">
                 <div class="form-group">
-                  <label>Enter username</label>
-                  <input class="form-control" id="username"></input>
+                  <input placeholder="Username" class="form-control" id="username"></input>
                   <br />
                   <input
                     type="submit"
@@ -45,25 +147,37 @@
           </div>
       </div>
 
-      <div id="messageArea" class="row">
-        <div class="col-md-4">
-          <div class="well">
-            <h3>Online users</h3>
-            <ul id="users" class="list-group"></ul>
+      <div id="messageArea" class="message-container">
+
+        
+          <input type="checkbox" class="hamburger" id="check" />
+          <div class="hambar" id="hambar">
+  
+            <div class="col-md-4">
+              <div class="well">
+                <h3>Online users</h3>
+                <ul id="users" class="list-group"></ul>
+              </div>
+            </div>
+  
           </div>
-        </div>
+  
+  
+        
+       
         <div class="col-md-8">
-          <div class="chat" id="chat"></div>
+          <div class="messageitself" id="chat"></div>
           <form id="messageForm">
             <div class="form-group">
-              <label>Enter message</label>
-              <textarea class="form-control" id="message"></textarea>
-              <br />
-              <input
-                type="submit"
-                class="btn btn-primary"
-                value="Send Message"
-              />
+              
+                <input autocomplete="off" class="form-control" id="message" placeholder="Enter message..."></input>
+                <input
+                  type="submit"
+                  class="btn btn-primary"
+                  value="Send"
+                />
+  
+              
             </div>
           </form>
         </div>
@@ -85,10 +199,12 @@
           console.log("submitted");
           socket.emit("send message", $message.val());
           $message.val("");
+          $message.focus();
         });
 
         socket.on("new message", function (data) {
-          $chat.append('<div class="well well-sm">' + data.msg + "</div>");
+          $chat.append('<div class="well well-sm"><strong>'+data.user+': </strong>' + data.msg + "</div>");
+          
         });
 
         $userForm.submit(function (e) {
@@ -97,7 +213,7 @@
           socket.emit("new user", $username.val(), function(data){
               if(data){
                   $userFormArea.hide();
-                  $messageArea.show();
+                  $messageArea.css("display", "flex");
               }
           });
           $username.val("");
