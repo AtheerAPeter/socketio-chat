@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet"> 
     <!-- <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
@@ -16,6 +17,8 @@
 body,.container {
   background-color: #eeeeee;
   height: 100vh;
+  font-family: 'Nunito', sans-serif;
+  font-weight: bold;
 }
 
 #messageArea {
@@ -101,7 +104,7 @@ input{
 .well{
   background-color: #dddddd;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 20px;
   margin: 10px;
   width: fit-content;
   height: fit-content;
@@ -115,6 +118,10 @@ input{
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.mymessage{
+  background-image: linear-gradient(45deg,  #90FC8E,#11A49B);
+  border-bottom-right-radius: 0px;
 }
 
     </style>
@@ -166,7 +173,9 @@ input{
         
        
         <div class="col-md-8">
-          <div class="messageitself" id="chat"></div>
+          <div class="messageitself" id="chat">
+            <div id="newmessage"></div>
+          </div>
           <form id="messageForm">
             <div class="form-group">
               
@@ -201,15 +210,23 @@ input{
           $message.val("");
           $message.focus();
         });
-
         socket.on("new message", function (data) {
-          $chat.append('<div class="well well-sm"><strong>'+data.user+': </strong>' + data.msg + "</div>");
+         if(data.user == localStorage.getItem("username")){
+          $chat.append('<div class="well mymessage" id="newmessage"><strong>'+data.user+': </strong>' + data.msg + "</div>");
+
+         }
+         else{
+          $chat.append('<div class="well" id="newmessage"><strong>'+data.user+': </strong>' + data.msg + "</div>");
+
+         }
           updateScroll()
         });
 
         $userForm.submit(function (e) {
           e.preventDefault();
           console.log("submitted");
+          localStorage.setItem("username", $username.val());
+          console.log($username.val());
           socket.emit("new user", $username.val(), function(data){
               if(data){
                   $userFormArea.hide();
