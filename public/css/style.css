@@ -153,3 +153,6 @@ svg {
   border-bottom-left-radius: 20px;
   align-self: flex-end;
 }
+.spacer {
+  height: 30px;
+}
