@@ -16,7 +16,7 @@ $(function () {
     $message.focus();
   });
   socket.on("new message", function (data) {
-    if (data.user == localStorage.getItem("username")) {
+    if (data.user == localStorage.getItem("user")) {
       $chat.append(
         '<div class="well mymessage" id="newmessage"><strong>' +
           data.user +
@@ -39,7 +39,7 @@ $(function () {
   $userForm.submit(function (e) {
     e.preventDefault();
     console.log("submitted");
-    localStorage.setItem("username", $username.val());
+    localStorage.setItem("user", $username.val());
     console.log($username.val());
     socket.emit("new user", $username.val(), function (data) {
       if (data) {
