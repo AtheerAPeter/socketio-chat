@@ -24,6 +24,12 @@ li {
   list-style-type: none;
   background-color: white;
 }
+.list-group-item {
+  background-color: #dddddd;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
+}
 .col-md-4 {
   height: 80vh;
   overflow: scroll;
@@ -36,8 +42,6 @@ li {
   height: 100%;
 }
 form {
-  /* position: relative;
-    bottom: 0; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -58,6 +62,8 @@ form {
   flex: 1;
 }
 input {
+  font-family: "Nunito", sans-serif;
+
   background-color: #dddddd;
   border-radius: 10px;
   margin: 10px;
@@ -72,7 +78,30 @@ input {
 
 .hamburger {
   z-index: 3;
-  justify-self: left;
+  position: absolute;
+  left: 10px;
+  width: 20px;
+  height: 10px;
+  opacity: 0;
+  margin-top: 10px;
+  margin-left: 5px;
+}
+.bar {
+  height: fit-content;
+  width: fit-content;
+  position: relative;
+}
+svg {
+  pointer-events: none;
+  z-index: 3;
+  position: absolute;
+  left: 10px;
+  margin-top: 10px;
+  margin-left: 5px;
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  transition: all 0.5s ease;
 }
 .hambar {
   z-index: 2;
@@ -92,6 +121,10 @@ input {
 }
 .hamburger:checked ~ .hambar {
   left: -5%;
+}
+.hamburger:checked ~ svg {
+  width: 25px;
+  height: 25px;
 }
 
 .well {

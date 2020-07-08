@@ -26,6 +26,8 @@
           <div class="col-md-12">
             <form id="userForm">
                 <div class="form-group">
+                  
+
                   <input placeholder="Username" class="form-control" id="username"></input>
                   <br />
                   <input
@@ -40,12 +42,70 @@
 
       <div id="messageArea" class="message-container">
 
+          
+            <input type="checkbox" class="hamburger" id="check" />
+            <!-- <img class="hamicon" src="/img/list.svg" alt=""> -->
+            <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 394.971 394.971" style="enable-background:new 0 0 394.971 394.971;" xml:space="preserve">
+<g>
+	<g>
+		<g>
+			<path d="M56.424,146.286c-28.277,0-51.2,22.923-51.2,51.2s22.923,51.2,51.2,51.2s51.2-22.923,51.2-51.2
+				S84.701,146.286,56.424,146.286z M56.424,227.788L56.424,227.788c-16.735,0-30.302-13.567-30.302-30.302
+				s13.567-30.302,30.302-30.302c16.735,0,30.302,13.567,30.302,30.302S73.16,227.788,56.424,227.788z"/>
+			<path d="M379.298,187.037H143.151c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h236.147
+				c5.771,0,10.449-4.678,10.449-10.449S385.069,187.037,379.298,187.037z"/>
+			<path d="M56.424,0c-28.277,0-51.2,22.923-51.2,51.2s22.923,51.2,51.2,51.2s51.2-22.923,51.2-51.2S84.701,0,56.424,0z
+				 M56.424,81.502c-16.735,0-30.302-13.567-30.302-30.302s13.567-30.302,30.302-30.302S86.726,34.465,86.726,51.2
+				S73.16,81.502,56.424,81.502z"/>
+			<path d="M143.151,61.649h236.147c5.771,0,10.449-4.678,10.449-10.449s-4.678-10.449-10.449-10.449H143.151
+				c-5.771,0-10.449,4.678-10.449,10.449S137.38,61.649,143.151,61.649z"/>
+			<path d="M56.424,292.571c-28.277,0-51.2,22.923-51.2,51.2c0,28.277,22.923,51.2,51.2,51.2s51.2-22.923,51.2-51.2
+				C107.624,315.494,84.701,292.571,56.424,292.571z M86.726,343.771c0,16.735-13.567,30.302-30.302,30.302v0
+				c-16.735,0-30.302-13.567-30.302-30.302c0-16.735,13.567-30.302,30.302-30.302S86.726,327.036,86.726,343.771L86.726,343.771z"/>
+			<path d="M379.298,333.322H143.151c-5.771,0-10.449,4.678-10.449,10.449s4.678,10.449,10.449,10.449h236.147
+				c5.771,0,10.449-4.678,10.449-10.449S385.069,333.322,379.298,333.322z"/>
+		</g>
+	</g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+</svg>
+  
         
-          <input type="checkbox" class="hamburger" id="check" />
+
           <div class="hambar" id="hambar">
   
             <div class="col-md-4">
-              <div class="well">
+              <div class="online">
                 <h3>Online users</h3>
                 <ul id="users" class="list-group"></ul>
               </div>
@@ -76,63 +136,6 @@
         </div>
       </div>
     </div>
-    <script>
-      $(function () {
-        var socket = io.connect();
-        var $messageForm = $("#messageForm");
-        var $message = $("#message");
-        var $chat = $("#chat");
-        var $userFormArea =$('#userFormArea');
-        var $userForm = $("#userForm");
-        var $messageArea = $("#messageArea");
-        var $username =$("#username");
-        var $users = $("#users");
-        $messageForm.submit(function (e) {
-          e.preventDefault();
-          console.log("submitted");
-          socket.emit("send message", $message.val());
-          $message.val("");
-          $message.focus();
-        });
-        socket.on("new message", function (data) {
-         if(data.user == localStorage.getItem("username")){
-          $chat.append('<div class="well mymessage" id="newmessage"><strong>'+data.user+': </strong>' + data.msg + "</div>");
-
-         }
-         else{
-          $chat.append('<div class="well" id="newmessage"><strong>'+data.user+': </strong>' + data.msg + "</div>");
-
-         }
-          updateScroll()
-        });
-
-        $userForm.submit(function (e) {
-          e.preventDefault();
-          console.log("submitted");
-          localStorage.setItem("username", $username.val());
-          console.log($username.val());
-          socket.emit("new user", $username.val(), function(data){
-              if(data){
-                  $userFormArea.hide();
-                  $messageArea.css("display", "flex");
-              }
-          });
-          $username.val("");
-        });
-
-        socket.on("get users", function(data){
-            var html ="";
-            for(i =0;i<data.length;i++){
-                html+='<li class="list-group-item">'+data[i]+'</li>';
-            }
-            $users.html(html);
-        });
-      });
-      function updateScroll() {
-  var element = document.getElementById("chat");
-  element.scrollTop = element.scrollHeight;
-}
-
-    </script>
+    <script src="app.js"></script>
   </body>
 </html>
