@@ -8,6 +8,7 @@ $(function () {
   var $messageArea = $("#messageArea");
   var $username = $("#username");
   var $users = $("#users");
+
   $messageForm.submit(function (e) {
     e.preventDefault();
     console.log("submitted");
@@ -15,6 +16,7 @@ $(function () {
     $message.val("");
     $message.focus();
   });
+
   socket.on("new message", function (data) {
     if (data.user == localStorage.getItem("user")) {
       $chat.append(
